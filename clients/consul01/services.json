@@ -1,4 +1,9 @@
 {
+  "bind_addr": "172.22.0.5",
+  "data_dir": "/tmp",
+  "retry_join": ["172.22.0.2", "172.22.0.3", "172.22.0.4"],
+	"encrypt": "cM91HR4rPP60WS7ea2QzVQRd8dOUbx+y6msp/wJ8z8s=",
+  "node_name": "consulclient01",
   "services": [
     {
       "id": "nginx",

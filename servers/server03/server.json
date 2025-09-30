@@ -1,14 +1,11 @@
 {
 	"server": true,
-	"bind_addr": "172.22.0.2",
+	"bind_addr": "172.22.0.4",
 	"bootstrap_expect": 3,
 	"data_dir": "/tmp",
-	"node_name": "consulserver01",
+	"retry_join": ["172.22.0.2", "172.22.0.3"],
+	"node_name": "consulserver03",
 	"encrypt": "cM91HR4rPP60WS7ea2QzVQRd8dOUbx+y6msp/wJ8z8s=",
-	"client_addr": "0.0.0.0",
-	"ui_config": {
-		"enabled": true
-	},
   "ports": {
     "grpc": 8502
   }
