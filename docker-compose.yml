@@ -67,8 +67,8 @@ services:
         }
         EOF
         echo -e "hello\nnginx" > /usr/share/nginx/html/index.html
-        nginx
-        consul agent -config-dir=/etc/consul.d
+        nginx &
+        exec consul agent -config-dir=/etc/consul.d
     volumes:
       - ./clients/consul01:/etc/consul.d
     depends_on:
@@ -81,7 +81,32 @@ services:
     image: consul:1.10
     container_name: consulclient02
     hostname: consulclient02
-    command: ['consul', 'agent', '-config-dir=/etc/consul.d']
+    # install nginx, configure default site, and create index.html before starting consul agent
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        apk add --no-cache nginx
+        mkdir -p /usr/share/nginx/html
+        mkdir -p /etc/nginx/http.d
+        cat > /etc/nginx/http.d/default.conf <<EOF
+        # This is a default site configuration which will simply return 404, preventing
+        # chance access to any other virtualhost.
+        server {
+            listen 80 default_server;
+            listen [::]:80 default_server;
+
+            root /usr/share/nginx/html;
+
+            # You may need this to prevent return 404 recursion.
+            location = /404.html {
+                internal;
+            }
+        }
+        EOF
+        echo -e "hello\nnginx" > /usr/share/nginx/html/index.html
+        nginx &
+        exec consul agent -config-dir=/etc/consul.d
     volumes:
       - ./clients/consul02:/etc/consul.d
     networks:
